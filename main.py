@@ -1,5 +1,4 @@
 import numpy as np
-from enum import Enum
 
 from src.physics.dynamic_params import Coordinates, Velocity
 from src.objects.ball import Ball
@@ -8,7 +7,6 @@ from src.collision.calculator import get_nb_collisions
 
 
 def main():
-    #digits = 6
     digits = 6
 
     r1, r2 = 0.3, 0.6
