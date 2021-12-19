@@ -7,7 +7,7 @@ from src.collision.calculator import get_nb_collisions
 
 
 def main():
-    digits = 6
+    digits = 4
 
     r1, r2 = 0.3, 0.6
     m1, m2 = 1.0, np.power(100, digits-1)

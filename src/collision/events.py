@@ -16,40 +16,42 @@ class Events(Enum):
 class EventGenerator:
     @staticmethod
     def next_event(objectL: Ball, objectR: Ball):
+        rL = objectL.radius
+        dmax = Newton.max_distance(objectL, objectR)
         xL, xR = objectL.coordinates.x, objectR.coordinates.x
         vxL, vxR = objectL.velocity.x, objectR.velocity.x
 
         if vxL < 0 and vxR > 0:
             # <-- ->  < 0 REFLECTION
             # <- -->  > 0 REFLECTION
-            return Events.REFLECTION, xL / np.abs(vxL)
+            return Events.REFLECTION, (xL-rL) / np.abs(vxL)
         elif vxL > 0 and vxR < 0:
             # -> <--  < 0 COLLISION
             # --> <-  > 0 COLLISION
-            return Events.COLLISION_X, (xR - xL) / (vxL + np.abs(vxR))
+            return Events.COLLISION_X, (xR - xL - dmax) / (vxL + np.abs(vxR))
         elif vxL > 0 and vxR > 0:
             # -> -->  > 0 END
             if vxR >= vxL:
                 return Events.END, np.inf
             # --> ->  > 0 COLLISION
             if vxR < vxL:
-                return Events.COLLISION_X, (xR - xL) / (vxL - vxR)
+                return Events.COLLISION_X, (xR - xL - dmax) / (vxL - vxR)
         elif vxL <= 0 and vxR < 0:
             # <-- <-  > 0 REF
             if np.abs(vxL) >= np.abs(vxR):
-                return Events.REFLECTION, xL / np.abs(vxL)
+                return Events.REFLECTION, (xL - rL) / np.abs(vxL)
 
-            t_reflection = xL / np.abs(vxL) if vxL != 0 else np.inf
-            t_collision = (xR - xL) / (np.abs(vxR) - np.abs(vxL))
+            t_reflection = (xL - rL) / np.abs(vxL) if vxL != 0 else np.inf
+            t_collision = (xR - xL - dmax) / (np.abs(vxR) - np.abs(vxL))
             # <- <--  < 0 ?
             if t_reflection < t_collision:
                 return Events.REFLECTION, t_reflection
             else:
                 return Events.COLLISION_X, t_collision
         elif vxL < 0 and vxR == 0:
-            return Events.REFLECTION, xL / np.abs(vxL)
+            return Events.REFLECTION, (xL - rL) / np.abs(vxL)
         elif vxL > 0 and vxR == 0:
-            return Events.COLLISION_X, (xR - xL) / vxL
+            return Events.COLLISION_X, (xR - xL - dmax) / vxL
 
         raise ValueError("Impossible event")
 

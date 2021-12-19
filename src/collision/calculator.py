@@ -1,5 +1,3 @@
-from src.physics.dynamics import Newton
-
 from src.collision.events import Events, EventGenerator
 
 

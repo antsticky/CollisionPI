@@ -5,7 +5,8 @@
             "name": "Collider PI",
             "type": "python",
             "request": "launch",
-            "module": "main"
+            //"module": "main"
+            "module": "animation.main"
         }
     ]
 }
