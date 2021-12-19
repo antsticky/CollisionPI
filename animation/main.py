@@ -17,9 +17,9 @@ R = 0.75
 m1, m2 = 1.0, np.power(100, digits-1)
 ball1 = Ball(coordinates=Coordinates(x=3, y=ground_height + r),
              velocity=Velocity(x=0), mass=m1, radius=r)
-ball2 = Ball(coordinates=Coordinates(x=8, y=ground_height + R),
-             velocity=Velocity(x=-1), mass=m2, radius=R)
-inspect_dict = {"nb_collisions": 0}
+ball2 = Ball(coordinates=Coordinates(x=9, y=ground_height + R),
+             velocity=Velocity(x=-0.001), mass=m2, radius=R)
+inspect_dict = {"m1": ball1.mass, "m2": ball2.mass, "nb_collisions": 0}
 
 
 ################################################################
@@ -32,7 +32,7 @@ wall_height = 8
 ax = plt.axes(xlim=(-wall_width, 10), ylim=(0, 10))
 circle1 = plt.Circle((ball1.coordinates.x, ball1.coordinates.y), r, fc="b")
 circle2 = plt.Circle((ball2.coordinates.x, ball2.coordinates.y), R, fc="r")
-text_box = ax.text(7, 9, f" ", ha='center', va='center',
+text_box = ax.text(5, 9, f" ", ha='left', va='center',
                    fontsize=20, color="Red")
 
 
@@ -52,10 +52,11 @@ def init():
 
 
 def animate(i):
-    text_box.set_text(f'collisions = {inspect_dict["nb_collisions"]}')
+    text_box.set_text(
+        f'collisions = {inspect_dict["nb_collisions"]} \nM/m = {inspect_dict["m2"]/inspect_dict["m1"]}')
 
     nb_collisions_i, _ = EventGenerator.propagate(
-        ball1, ball2, 0.01)
+        ball1, ball2, 0.0000001)
     circle1.center = (ball1.coordinates.x, ball1.coordinates.y)
     circle2.center = (ball2.coordinates.x, ball2.coordinates.y)
 
@@ -69,7 +70,8 @@ if __name__ == '__main__':
     t0 = time()
     animate(0)
     t1 = time()
-    interval = 1000 * dt - (t1 - t0)
+    interval = 2000 * dt - (t1 - t0)
     anim = animation.FuncAnimation(
         fig, animate, init_func=init, frames=360, interval=interval, blit=True)
-    plt.show()
+    # plt.show()
+    anim.save("animation.mp4", fps=1/dt)
